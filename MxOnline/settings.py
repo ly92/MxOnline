@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'courses',
+    'organization',
+    'operation',
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"
@@ -86,7 +88,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '11111111',
         'HOST': 'localhost',
-        'PORT': '3306'
+        'PORT': '3306',
     }
 }
 
