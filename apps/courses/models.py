@@ -10,7 +10,7 @@ class Course(models.Model):
     fav_nums = models.IntegerField(default=0, verbose_name="收藏人数")
     image = models.ImageField(upload_to="course/%Y/%m",verbose_name="封面图片", max_length=100)
     click_nums = models.IntegerField(default=0, verbose_name="点击次数")
-    add_time = models.DateField(default=datetime.now, verbose_name="添加时间")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
         verbose_name = "课程"
@@ -20,7 +20,7 @@ class Course(models.Model):
 class Lesson(models.Model):
     course = models.ForeignKey(Course, verbose_name="课程")
     name = models.CharField(max_length=100, verbose_name="章节名")
-    add_time = models.DateField(default=datetime.now, verbose_name="添加时间")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
         verbose_name = "章节"
@@ -30,7 +30,7 @@ class Lesson(models.Model):
 class Video(models.Model):
     lesson = models.ForeignKey(Lesson, verbose_name="章节")
     name = models.CharField(max_length=100, verbose_name="视频名")
-    add_time = models.DateField(default=datetime.now, verbose_name="添加时间")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
         verbose_name = "视频"
@@ -41,7 +41,7 @@ class CourseResource(models.Model):
     course = models.ForeignKey(Course, verbose_name="课程")
     name = models.CharField(max_length=100, verbose_name="资源名称")
     download = models.FileField(upload_to="course/resource/%Y/%m", verbose_name="资源文件")
-    add_time = models.DateField(default=datetime.now, verbose_name="添加时间")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
         verbose_name = "课程资源"
