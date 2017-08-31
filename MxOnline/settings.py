@@ -64,7 +64,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
-        'TEMPLATE_DIRS': (os.path.join(BASE_DIR,  'templates'),),
+        # 'TEMPLATE_DIRS': (os.path.join(BASE_DIR, 'templates'),),
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -133,8 +133,8 @@ DEFAULT_CHARSET = 'utf-8'
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR,'static')
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR,'static')
+# )
 
 
