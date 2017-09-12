@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.generic.base import View
 from users.models import UserProfile, EmailVerifyRecord
 from operation.models import UserMessage
@@ -43,6 +43,12 @@ class LoginView(View):
 #             return render(request, 'login.html',{'msg':'用户名或者密码错误'})
 #     elif request.method == 'GET':
 #         return render(request,'login.html',{})
+
+#退出
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return render(request, 'login.html')
 
 # 注册
 class RegisterView(View):
