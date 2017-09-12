@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'operation',
     'xadmin',
     'crispy_forms',
+    'captcha',
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"
@@ -136,9 +137,22 @@ DEFAULT_CHARSET = 'utf-8'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+#配置邮箱发送者
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'   #email后端
+EMAIL_USE_TLS = False   #是否使用TLS安全传输协议
+EMAIL_USE_SSL = True     #是否使用SSL加密，qq企业邮箱要求使用
+EMAIL_HOST = 'smtp.exmail.qq.com'    #发送邮件的邮箱 的 SMTP服务器，这里用了qq企业邮箱
+EMAIL_PORT = 465    #发件箱的SMTP服务器端口
+EMAIL_HOST_USER = 'liyong@7xiaofu.com'  #发送邮件的邮箱地址
+EMAIL_HOST_PASSWORD = 'Ly1992'  #发送邮件的邮箱密码
+DEFAULT_FORM_EMAIL = 'liyong <liyong@7xiaofu.com>'
+EMAIL_FROM = 'liyong@7xiaofu.com'
+
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR,'static'),
 )
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
