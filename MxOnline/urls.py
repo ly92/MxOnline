@@ -32,5 +32,10 @@ urlpatterns = [
     url(r'^forget', ForgetPwdView.as_view(), name='forget'),
     url(r'^reset/(?P<reset_code>.*)/$', ResetPwdView.as_view(), name='reset'),
     url(r'^modify', ModifyPwdView.as_view(), name='modify'),
-    # url(r'login/',TemplateView.as_view(template_name="login.html"), name='login'),
+
+    #课程机构
+    url(r'^org/', include('organization.urls', namespace='org')),
+
+
+
 ]
