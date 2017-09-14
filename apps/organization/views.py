@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.db.models import Q
+# import random
 
 from .models import CourseOrg, CityDict, Teacher
 # Create your views here.
@@ -13,7 +14,22 @@ class OrgView(View):
     def get(self,request):
         #课程机构
         all_orgs = CourseOrg.objects.all()
-        hot_orgs = all_orgs.order_by('-click_num')[:3]
+        hot_orgs = all_orgs.order_by('-click_nums')[:3]
+
+        # for org in all_orgs:
+        #     org.fav_nums = random.randint(10,50)
+        #     org.save()
+        # for i in range(1,30):
+        #     course = CourseOrg()
+        #     course.name = '课程' + '%d' % (i)
+        #     course.desc = 'desc' + '%d' % (i)
+        #     course.address = 'address' + '%d' % (i)
+        #     id =  random.randint(1, 5)
+        #     city = CityDict.objects.get(id=id)
+        #     course.city = city
+        #     items = ['pxjg','gr','gx']
+        #     course.category = random.choice(items)
+        #     course.save()
 
         #城市
         all_citys = CityDict.objects.all()
