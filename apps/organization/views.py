@@ -4,6 +4,9 @@ from django.db.models import Q
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger  # 分页
 from .models import CourseOrg, CityDict, Teacher
+from users.models import UserProfile
+from operation.models import UserFavorite
+from courses.models import Course
 
 
 # Create your views here.
@@ -36,12 +39,12 @@ class OrgView(View):
         #     org.course_nums = random.randint(1,20)
         #     org.save()
         # for org in all_orgs:
-            # org.students = random.randint(0, 100)
-            # org.course_nums = random.randint(1, 20)
-            # org.desc = org.desc * 2
-            # org.address = org.address[0:20]
-            # org.name = '机构' + org.name[2:]
-            # org.save()
+        # org.students = random.randint(0, 100)
+        # org.course_nums = random.randint(1, 20)
+        # org.desc = org.desc * 2
+        # org.address = org.address[0:20]
+        # org.name = '机构' + org.name[2:]
+        # org.save()
 
         # 城市
         all_citys = CityDict.objects.all()
@@ -88,5 +91,60 @@ class OrgView(View):
             'category': category,
             'hot_orgs': hot_orgs,
             'sort': sort,
-            'keywords' : search_keywords,
+            'keywords': search_keywords,
         })
+
+
+class OrgHomeView(View):
+    def get(self, request, org_id):
+        org = CourseOrg.objects.get(id=org_id)
+        import random
+        # add course
+        # for course in Course.objects.all():
+        #     course.delete()
+        # for i in range(50, 150):
+        #     course = Course()
+        #     course.org = CourseOrg.objects.get(id=random.randint(1, 99))
+        #     course.name = '课程' + '%d' % (i)
+        #     course.desc = 'descripition' + '%d' % (i)
+        #     course.detail = 'detail' + '%d' % (i)
+        #     course.degree = random.choice(['cj', 'zj', 'gj'])
+        #     course.learn_times = random.randint(10, 100)
+        #     course.fav_nums = random.randint(0, 20)
+        #     course.click_nums = random.randint(0, 50)
+        #     course.save()
+        #for teacher in Teacher.objects.all():
+        #    teacher.work_position = random.choice(['讲师','主任','院长','教授'])
+        #    teacher.save()
+        # for i in range(30,100):
+        #     teacher = Teacher()
+        #     teacher.org = CourseOrg.objects.get(id=random.randint(1,99))
+        #     teacher.name = '教师' + '%d'%(i)
+        #     teacher.work_years = random.randint(1,10)
+        #     teacher.work_company = teacher.org.name
+        #     teacher.work_position = teacher.org.address
+        #     teacher.points = random.choice(['OC','Swift','Python','PHP'])
+        #     teacher.click_nums = random.randint(0,40)
+        #     teacher.fav_nums = random.randint(0,20)
+        #     teacher.save()
+        if org:
+            # 点击数量+1
+            org.click_nums += 1
+            org.save()
+            # 是否收藏
+            has_fav = False
+            if request.user.is_authenticated():
+                if UserFavorite.objects.filter(user=request.user, fav_id=org_id, fav_type=2):
+                    has_fav = True
+            # 教师
+            teachers = org.teacher_set.all()
+            # 课程
+            courses = org.course_set.all()
+            return render(request, 'org-detail-homepage.html', {
+                'course_org': org,
+                'has_fav': has_fav,
+                'teachers': teachers,
+                'courses': courses,
+            })
+        else:
+            return render(request, 'active_fail.html', {'msg': '未找到该机构'})
