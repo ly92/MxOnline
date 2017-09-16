@@ -158,6 +158,7 @@
                     <p class="error company-tips" id="jsCompanyTips"></p>
                     <input class="btn" type="text" id="jsStayBtn" value="立即咨询 >"/>
                     <input type='hidden' name='csrfmiddlewaretoken' value='5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy'/>
+                        {% csrf_token %}
                 </form>
             </div>
 
@@ -184,8 +185,8 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: "/org/add_ask/",
-                    data: $('#jsStayForm').serialize(),
+                    url: "{% url 'org:user_ask' %}",
+                    data: $('jsStayForm').serialize(),
                     async: true,
                     success: function (data) {
                         if (data.status == 'success') {

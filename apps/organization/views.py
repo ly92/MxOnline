@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.db.models import Q
+from django.http import HttpResponse
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger  # 分页
 from .models import CourseOrg, CityDict, Teacher
 from users.models import UserProfile
 from operation.models import UserFavorite
 from courses.models import Course
+from .forms import UserAskForms
 
 
 # Create your views here.
@@ -21,30 +23,34 @@ class OrgView(View):
         # 课程机构
         all_orgs = CourseOrg.objects.all()
         hot_orgs = all_orgs.order_by('-click_nums')[:3]
-
         # import random
-        # for i in range(30,100):
+        # for i in range(1, 100):
         #     org = CourseOrg()
         #     org.name = '课程' + '%d' % (i)
         #     org.desc = 'desc' + '%d' % (i)
         #     org.address = 'address' + '%d' % (i)
-        #     id =  random.randint(1, 5)
+        #     id = random.randint(1, 5)
         #     city = CityDict.objects.get(id=id)
         #     org.city = city
-        #     items = ['pxjg','gr','gx']
+        #     items = ['pxjg', 'gr', 'gx']
         #     org.category = random.choice(items)
         #     org.fav_nums = random.randint(10, 50)
         #     org.click_nums = random.randint(0, 15)
-        #     org.students = random.randint(0,100)
-        #     org.course_nums = random.randint(1,20)
+        #     org.students = random.randint(0, 100)
+        #     org.course_nums = random.randint(1, 20)
+        #     org.students = random.randint(0, 100)
+        #     org.course_nums = random.randint(1, 20)
+        #     org.desc = org.desc * 2
+        #     org.address = org.address[0:20]
+        #     org.name = '机构' + org.name[2:]
         #     org.save()
         # for org in all_orgs:
-        # org.students = random.randint(0, 100)
-        # org.course_nums = random.randint(1, 20)
-        # org.desc = org.desc * 2
-        # org.address = org.address[0:20]
-        # org.name = '机构' + org.name[2:]
-        # org.save()
+        #     org.students = random.randint(0, 100)
+        #     org.course_nums = random.randint(1, 20)
+        #     org.desc = org.desc * 2
+        #     org.address = org.address[0:20]
+        #     org.name = '机构' + org.name[2:]
+        #     org.save()
 
         # 城市
         all_citys = CityDict.objects.all()
@@ -98,11 +104,11 @@ class OrgView(View):
 class OrgHomeView(View):
     def get(self, request, org_id):
         org = CourseOrg.objects.get(id=org_id)
-        import random
+        # import random
         # add course
         # for course in Course.objects.all():
         #     course.delete()
-        # for i in range(50, 150):
+        # for i in range(1, 150):
         #     course = Course()
         #     course.org = CourseOrg.objects.get(id=random.randint(1, 99))
         #     course.name = '课程' + '%d' % (i)
@@ -113,19 +119,17 @@ class OrgHomeView(View):
         #     course.fav_nums = random.randint(0, 20)
         #     course.click_nums = random.randint(0, 50)
         #     course.save()
-        #for teacher in Teacher.objects.all():
-        #    teacher.work_position = random.choice(['讲师','主任','院长','教授'])
-        #    teacher.save()
-        # for i in range(30,100):
+        # for i in range(1, 100):
         #     teacher = Teacher()
-        #     teacher.org = CourseOrg.objects.get(id=random.randint(1,99))
-        #     teacher.name = '教师' + '%d'%(i)
-        #     teacher.work_years = random.randint(1,10)
+        #     teacher.org = CourseOrg.objects.get(id=random.randint(1, 99))
+        #     teacher.name = '教师' + '%d' % (i)
+        #     teacher.work_years = random.randint(1, 10)
         #     teacher.work_company = teacher.org.name
         #     teacher.work_position = teacher.org.address
-        #     teacher.points = random.choice(['OC','Swift','Python','PHP'])
-        #     teacher.click_nums = random.randint(0,40)
-        #     teacher.fav_nums = random.randint(0,20)
+        #     teacher.points = random.choice(['OC', 'Swift', 'Python', 'PHP'])
+        #     teacher.click_nums = random.randint(0, 40)
+        #     teacher.fav_nums = random.randint(0, 20)
+        #     teacher.work_position = random.choice(['讲师', '主任', '院长', '教授'])
         #     teacher.save()
         if org:
             # 点击数量+1
@@ -148,3 +152,16 @@ class OrgHomeView(View):
             })
         else:
             return render(request, 'active_fail.html', {'msg': '未找到该机构'})
+
+
+class AddUserAskView(View):
+    """
+       用户添加咨询
+    """
+    def post(self,request):
+        user_ask_form = UserAskForms(request.POST)
+        if user_ask_form.is_valid():
+            user_ask = user_ask_form.save(commit=True)
+            return HttpResponse('{"status" : "success"}', content_type='application/json')
+        else:
+            return HttpResponse('{"status" : "fail", "msg" : "添加出错"}', content_type='application/json')
