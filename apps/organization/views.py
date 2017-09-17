@@ -159,13 +159,9 @@ class AddUserAskView(View):
        用户添加咨询
     """
     def post(self, request):
-        print('1')
         user_ask_form = UserAskForms(request.POST)
-        print('1.5')
         if user_ask_form.is_valid():
-            print('2')
             user_ask = user_ask_form.save(commit=True)
             return HttpResponse('{"status" : "success"}', content_type='application/json')
         else:
-            print('3')
             return HttpResponse('{"status" : "fail", "msg" : "添加出错"}', content_type='application/json')

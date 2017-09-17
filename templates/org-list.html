@@ -180,13 +180,32 @@
 
 {% block custom_js %}
     <script>
+        {#        $("#jsStayBtn").click(function () {#}
+        {#            $.ajax({#}
+        {#                url:"{% url 'org:user_ask' %}",#}
+        {#                type:"POST",#}
+        {#                data:$('jsStayForm').serialize(),#}
+        {#                headers:{"X_CSRFTOKEN" : $.cookie("csrftoken")},#}
+        {#                success:function (data) {#}
+        {#                    if (data.status == 'success') {#}
+        {#                            $('#jsStayForm')[0].reset();#}
+        {#                            alert("提交成功")#}
+        {#                        } else if (data.status == 'fail') {#}
+        {#                            $('#jsCompanyTips').html(data.msg)#}
+        {#                        }#}
+        {#                }#}
+        {#            })#}
+        {#        })#}
+
+        $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
         $(function () {
             $('#jsStayBtn').on('click', function () {
                 $.ajax({
                     cache: false,
                     type: "POST",
                     url: "{% url 'org:user_ask' %}",
-                    data: $('jsStayForm').serialize(),
+{#                    data: $('jsStayForm').serialize(),#}
+                    data:{'name' : 'ly', 'mobile' : '18612334016', 'course_name' : 'kecehng'},
                     async: true,
                     success: function (data) {
                         if (data.status == 'success') {

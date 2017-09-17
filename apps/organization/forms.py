@@ -1,11 +1,10 @@
 __author__ = 'ly'
 __date__ = '2017/9/16 下午11:19'
 
-from django import forms
+from django.forms import ModelForm
 from operation.models import UserAsk
 
-class UserAskForms(forms.ModelForm):
-
+class UserAskForms(ModelForm):
     class Meta:
-        models = UserAsk
+        model = UserAsk
         fields = ['name', 'mobile', 'course_name']
