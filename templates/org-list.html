@@ -142,7 +142,7 @@
 
             <div class="right companyright">
                 <div class="head">我要学习</div>
-                <form class="rightform" id="jsStayForm">
+                <form class="rightform" id="jsStayForm" method="post">
                     <div>
                         <img src="{% static 'images/rightform1.png' %}"/>
                         <input type="text" name="name" id="companyName" placeholder="名字" maxlength="25"/>
@@ -180,23 +180,6 @@
 
 {% block custom_js %}
     <script>
-        {#        $("#jsStayBtn").click(function () {#}
-        {#            $.ajax({#}
-        {#                url:"{% url 'org:user_ask' %}",#}
-        {#                type:"POST",#}
-        {#                data:$('jsStayForm').serialize(),#}
-        {#                headers:{"X_CSRFTOKEN" : $.cookie("csrftoken")},#}
-        {#                success:function (data) {#}
-        {#                    if (data.status == 'success') {#}
-        {#                            $('#jsStayForm')[0].reset();#}
-        {#                            alert("提交成功")#}
-        {#                        } else if (data.status == 'fail') {#}
-        {#                            $('#jsCompanyTips').html(data.msg)#}
-        {#                        }#}
-        {#                }#}
-        {#            })#}
-        {#        })#}
-
         $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
         $(function () {
             $('#jsStayBtn').on('click', function () {
@@ -204,8 +187,7 @@
                     cache: false,
                     type: "POST",
                     url: "{% url 'org:user_ask' %}",
-{#                    data: $('jsStayForm').serialize(),#}
-                    data:{'name' : 'ly', 'mobile' : '18612334016', 'course_name' : 'kecehng'},
+                    data: $('#jsStayForm').serialize(),
                     async: true,
                     success: function (data) {
                         if (data.status == 'success') {
