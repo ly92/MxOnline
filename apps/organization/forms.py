@@ -6,7 +6,7 @@ from django import forms
 from operation.models import UserAsk
 
 class UserAskForms(forms.ModelForm):
-    mobile = forms.CharField(max_length=11, min_length=11)
+    mobile = forms.CharField(required=True, max_length=11, min_length=11)
     class Meta:
         model = UserAsk
         fields = ['name', 'mobile', 'course_name']
