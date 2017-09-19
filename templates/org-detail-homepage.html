@@ -96,9 +96,9 @@
         <div class="left">
             <ul>
                 <li class="active2"><a href="org-detail-homepage.html">机构首页</a></li>
-                <li class=""><a href="org-detail-course.html">机构课程</a></li>
-                <li class=""><a href="org-detail-desc.html">机构介绍</a></li>
-                <li class=""><a href="org-detail-teachers.html">机构讲师</a></li>
+                <li class=""><a href="{% url 'org:org_detail_course' %}">机构课程</a></li>
+                <li class=""><a href="{% url 'org:org_detail_desc' %}">机构介绍</a></li>
+                <li class=""><a href="{% url 'org:org_detail_teacher' %}">机构讲师</a></li>
             </ul>
         </div>
 
