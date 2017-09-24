@@ -145,6 +145,7 @@ class OrgHomeView(View):
         #     teacher.work_position = random.choice(['讲师', '主任', '院长', '教授'])
         #     teacher.save()
         if org:
+            current_page = 'home'
             # 点击数量+1
             org.click_nums += 1
             org.save()
@@ -162,6 +163,7 @@ class OrgHomeView(View):
                 'has_fav': has_fav,
                 'teachers': teachers,
                 'courses': courses,
+                'current_page' : current_page,
             })
         else:
             return render(request, 'active_fail.html', {'msg': '未找到该机构'})
@@ -169,14 +171,83 @@ class OrgHomeView(View):
 
 
 class OrgDetailCourseView(View):
-    def get(self,request):
-        return render(request,'org-detail-course.html')
+    def get(self, request, org_id):
+        org = CourseOrg.objects.get(id=org_id)
+        if org:
+            current_page = 'home'
+            # 点击数量+1
+            org.click_nums += 1
+            org.save()
+            # 是否收藏
+            has_fav = False
+            if request.user.is_authenticated():
+                if UserFavorite.objects.filter(user=request.user, fav_id=org_id, fav_type=2):
+                    has_fav = True
+            # 教师
+            teachers = org.teacher_set.all()
+            # 课程
+            courses = org.course_set.all()
+            return render(request, 'org-detail-course.html', {
+                'course_org': org,
+                'has_fav': has_fav,
+                'teachers': teachers,
+                'courses': courses,
+                'current_page' : current_page,
+            })
+        else:
+            return render(request, 'active_fail.html', {'msg': '未找到该机构'})
 
 
 class OrgDetailDescView(View):
-    def get(self,request):
-        return render(request,'org-detail-desc.html')
+    def get(self, request, org_id):
+        org = CourseOrg.objects.get(id=org_id)
+        if org:
+            current_page = 'home'
+            # 点击数量+1
+            org.click_nums += 1
+            org.save()
+            # 是否收藏
+            has_fav = False
+            if request.user.is_authenticated():
+                if UserFavorite.objects.filter(user=request.user, fav_id=org_id, fav_type=2):
+                    has_fav = True
+            # 教师
+            teachers = org.teacher_set.all()
+            # 课程
+            courses = org.course_set.all()
+            return render(request, 'org-detail-desc.html', {
+                'course_org': org,
+                'has_fav': has_fav,
+                'teachers': teachers,
+                'courses': courses,
+                'current_page' : current_page,
+            })
+        else:
+            return render(request, 'active_fail.html', {'msg': '未找到该机构'})
 
 class OrgDetailTeacherView(View):
-    def get(self,request):
-        return render(request,'org-detail-teachers.html')
+    def get(self, request, org_id):
+        org = CourseOrg.objects.get(id=org_id)
+        if org:
+            current_page = 'home'
+            # 点击数量+1
+            org.click_nums += 1
+            org.save()
+            # 是否收藏
+            has_fav = False
+            if request.user.is_authenticated():
+                if UserFavorite.objects.filter(user=request.user, fav_id=org_id, fav_type=2):
+                    has_fav = True
+            # 教师
+            teachers = org.teacher_set.all()
+            # 课程
+            courses = org.course_set.all()
+            return render(request, 'org-detail-teachers.html', {
+                'course_org': org,
+                'has_fav': has_fav,
+                'teachers': teachers,
+                'courses': courses,
+                'current_page' : current_page,
+            })
+        else:
+            return render(request, 'active_fail.html', {'msg': '未找到该机构'})

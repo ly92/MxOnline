@@ -61,13 +61,13 @@
                         <div class="searchbox fr">
                             <div class="selectContainer fl">
                             <span class="selectOption" id="jsSelectOption" data-value="course">
-                                {% if request.path|slice:'9' == '/org/list' %}
-                                    课程机构
-                                {% elif request.path|slice:'8' == '/teacher' %}
-                                    授课老师
-                                {% else %}
+{#                                {% if request.path|slice:'9' == '/org/list' %}#}
+{#                                    课程机构#}
+{#                                {% elif request.path|slice:'8' == '/teacher' %}#}
+{#                                    授课老师#}
+{#                                {% else %}#}
                                     公开课
-                                {% endif %}
+{#                                {% endif %}#}
                             </span>
                                 <ul class="selectMenu" id="jsSelectMenu">
                                     <li data-value="course">公开课</li>
