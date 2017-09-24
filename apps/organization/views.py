@@ -113,7 +113,6 @@ class AddUserAskView(View):
             return HttpResponse('{"status" : "fail", "msg" : "添加出错"}', content_type='application/json')
 
 
-
 class OrgHomeView(View):
     def get(self, request, org_id):
         org = CourseOrg.objects.get(id=org_id)
@@ -168,8 +167,6 @@ class OrgHomeView(View):
         else:
             return render(request, 'active_fail.html', {'msg': '未找到该机构'})
 
-
-
 class OrgDetailCourseView(View):
     def get(self, request, org_id):
         org = CourseOrg.objects.get(id=org_id)
@@ -196,7 +193,6 @@ class OrgDetailCourseView(View):
             })
         else:
             return render(request, 'active_fail.html', {'msg': '未找到该机构'})
-
 
 class OrgDetailDescView(View):
     def get(self, request, org_id):
@@ -251,3 +247,29 @@ class OrgDetailTeacherView(View):
             })
         else:
             return render(request, 'active_fail.html', {'msg': '未找到该机构'})
+
+class AddFavView(View):
+    """
+    收藏／取消收藏
+    """
+    def post(self, request):
+        fav_id = request.POST.get('fav_id')
+        fav_type = request.POST.get('fav_type')
+        if request.user.is_authenticated:
+            favs = UserFavorite.objects.filter(user=request.user, fav_id=fav_id, fav_type=fav_type)
+            if favs:
+                for fav in favs:
+                    fav.delete()
+                print("1")
+                return HttpResponse('{"status" : "success", "msg" : "收藏"}', content_type='application/json')
+            else:
+                fav = UserFavorite()
+                fav.fav_type = fav_type
+                fav.fav_id = fav_id
+                fav.user = request.user
+                fav.save()
+                print("2")
+                return HttpResponse('{"status": "success", "msg": "已收藏"}', content_type='application/json')
+        else:
+            print("3")
+            return HttpResponse('{"status" : "fail", "msg" : "用户未登录"}', content_type='application/json')
