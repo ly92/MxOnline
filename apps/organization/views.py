@@ -258,6 +258,7 @@ class AddFavView(View):
     """
     收藏／取消收藏
     """
+
     def post(self, request):
         fav_id = request.POST.get('fav_id')
         fav_type = request.POST.get('fav_type')  # (1,"课程"),(2,"课程机构"),(3,"教师")
@@ -303,3 +304,13 @@ class AddFavView(View):
                 return HttpResponse('{"status": "success", "msg": "已收藏"}', content_type='application/json')
         else:
             return HttpResponse('{"status" : "fail", "msg" : "用户未登录"}', content_type='application/json')
+
+
+class TeachersListView(View):
+    def get(self, request):
+        return render(request, 'teachers-list.html')
+
+
+class TeacherDetailView(View):
+    def get(self, request):
+        return render(request, 'teacher-detail.html')
