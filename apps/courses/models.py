@@ -1,10 +1,11 @@
 from django.db import models
 from datetime import datetime
 
-from organization.models import CourseOrg
+from organization.models import CourseOrg, Teacher
 
 class Course(models.Model):
     org = models.ForeignKey(CourseOrg, verbose_name='所属机构')
+    teacher = models.ForeignKey(Teacher, verbose_name='所属讲师')
     name = models.CharField(max_length=50, verbose_name="课程名称")
     desc = models.CharField(max_length=300, verbose_name="课程描述")
     detail = models.TextField(verbose_name="课程详情")

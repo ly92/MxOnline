@@ -174,23 +174,17 @@ class OrgDetailCourseView(View):
     def get(self, request, org_id):
         org = CourseOrg.objects.get(id=org_id)
         if org:
-            current_page = 'home'
-            # 点击数量+1
-            org.click_nums += 1
-            org.save()
+            current_page = 'course'
             # 是否收藏
             has_fav = False
             if request.user.is_authenticated():
                 if UserFavorite.objects.filter(user=request.user, fav_id=org_id, fav_type=2):
                     has_fav = True
-            # 教师
-            teachers = org.teacher_set.all()
             # 课程
             courses = org.course_set.all()
             return render(request, 'org-detail-course.html', {
                 'course_org': org,
                 'has_fav': has_fav,
-                'teachers': teachers,
                 'courses': courses,
                 'current_page': current_page,
             })
@@ -202,24 +196,15 @@ class OrgDetailDescView(View):
     def get(self, request, org_id):
         org = CourseOrg.objects.get(id=org_id)
         if org:
-            current_page = 'home'
-            # 点击数量+1
-            org.click_nums += 1
-            org.save()
+            current_page = 'desc'
             # 是否收藏
             has_fav = False
             if request.user.is_authenticated():
                 if UserFavorite.objects.filter(user=request.user, fav_id=org_id, fav_type=2):
                     has_fav = True
-            # 教师
-            teachers = org.teacher_set.all()
-            # 课程
-            courses = org.course_set.all()
             return render(request, 'org-detail-desc.html', {
                 'course_org': org,
                 'has_fav': has_fav,
-                'teachers': teachers,
-                'courses': courses,
                 'current_page': current_page,
             })
         else:
@@ -230,10 +215,7 @@ class OrgDetailTeacherView(View):
     def get(self, request, org_id):
         org = CourseOrg.objects.get(id=org_id)
         if org:
-            current_page = 'home'
-            # 点击数量+1
-            org.click_nums += 1
-            org.save()
+            current_page = 'teacher'
             # 是否收藏
             has_fav = False
             if request.user.is_authenticated():
@@ -241,13 +223,11 @@ class OrgDetailTeacherView(View):
                     has_fav = True
             # 教师
             teachers = org.teacher_set.all()
-            # 课程
-            courses = org.course_set.all()
+
             return render(request, 'org-detail-teachers.html', {
                 'course_org': org,
                 'has_fav': has_fav,
                 'teachers': teachers,
-                'courses': courses,
                 'current_page': current_page,
             })
         else:
@@ -258,7 +238,6 @@ class AddFavView(View):
     """
     收藏／取消收藏
     """
-
     def post(self, request):
         fav_id = request.POST.get('fav_id')
         fav_type = request.POST.get('fav_type')  # (1,"课程"),(2,"课程机构"),(3,"教师")
@@ -276,7 +255,7 @@ class AddFavView(View):
                         if courseOrg.fav_nums > 0:
                             courseOrg.fav_nums -= 1
                             courseOrg.save()
-                    else:
+                    elif fav_type == 3:
                         teacher = Teacher.objects.get(id=int(fav_id))
                         if teacher.fav_nums > 0:
                             teacher.fav_nums -= 1
@@ -297,7 +276,7 @@ class AddFavView(View):
                     courseOrg = CourseOrg.objects.get(id=int(fav_id))
                     courseOrg.fav_nums += 1
                     courseOrg.save()
-                else:
+                elif fav_type == 3:
                     teacher = Teacher.objects.get(id=int(fav_id))
                     teacher.fav_nums += 1
                     teacher.save()
@@ -308,9 +287,66 @@ class AddFavView(View):
 
 class TeachersListView(View):
     def get(self, request):
-        return render(request, 'teachers-list.html')
+        all_teachers = Teacher.objects.all()
+        # 讲师排行榜
+        sorted_teacher = all_teachers.order_by('-click_nums')[:3]
+
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_teachers = all_teachers.filter(Q(name__icontains=search_keywords) |
+                                               Q(work_company__icontains=search_keywords) |
+                                               Q(work_position__icontains=search_keywords))
+
+        # 根据人气排序
+        sort = request.GET.get('sort', '')
+        if sort:
+            if sort == 'hot':
+                all_teachers = all_teachers.order_by('-click_nums')
+
+        # 分页显示
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(all_teachers, 5, request=request)
+        sub_teachers = p.page(page)
+
+        return render(request, 'teachers-list.html', {
+            'teachers': sub_teachers,
+            'sorted_teachers': sorted_teacher,
+            'sort': sort,
+            'teacher_nums': all_teachers.count(),
+            'keywords': search_keywords,
+        })
 
 
 class TeacherDetailView(View):
-    def get(self, request):
-        return render(request, 'teacher-detail.html')
+    def get(self, request, teacher_id):
+        print(teacher_id)
+        teacher = Teacher.objects.get(id=int(teacher_id))
+        # 浏览量增加
+        teacher.click_nums += 1
+        teacher.save()
+        # 讲师的全部课程
+        all_courses = Course.objects.filter(teacher=teacher)
+        # 是否已收藏讲师
+        has_teacher_faved = False
+        #是否已收藏机构
+        has_org_faved = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(fav_id=teacher_id, user=request.user, fav_type=3):
+                has_teacher_faved = True
+            if UserFavorite.objects.filter(fav_id=teacher.org.id, user=request.user, fav_type=2):
+                has_org_faved = True
+        #讲师排名
+        sorted_teachers = Teacher.objects.all().order_by('-click_nums')[:3]
+
+        return render(request, 'teacher-detail.html', {
+            'teacher' : teacher,
+            'all_courses' : all_courses,
+            'sorted_teachers' : sorted_teachers,
+            'has_teacher_faved' : has_teacher_faved,
+            'has_org_faved' : has_org_faved,
+        })
+
