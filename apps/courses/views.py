@@ -7,3 +7,9 @@ from django.views.generic import View
 class CourseDetailView(View):
     def get(self,request):
         return render(request, 'course-detail.html')
+
+
+
+class CourseListView(View):
+    def get(self,request):
+        return render(request, 'course-list.html')
