@@ -7,6 +7,10 @@ from .models import Course
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
+from django.http import HttpResponse
+
+
+
 class CourseDetailView(View):
     def get(self,request):
         return render(request, 'course-detail.html')
@@ -16,7 +20,6 @@ class CourseDetailView(View):
 class CourseListView(View):
     def get(self,request):
         all_courses = Course.objects.all()
-
         search_key = request.GET.get('keywords', '')
         sort = request.GET.get('sort','')
         if search_key:
@@ -24,19 +27,18 @@ class CourseListView(View):
 
         if sort:
             if sort == 'hot':
-                all_courses.order_by('-click_nums')
+                all_courses = all_courses.order_by('-click_nums')
             elif sort == 'students':
-                all_courses.order_by('-fav_nums')
+                all_courses = all_courses.order_by('-fav_nums')
 
         try:
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 1
 
-        p = Paginator(all_courses, 9, request)
+        p = Paginator(all_courses, 9, request=request)
 
         courses = p.page(page)
-
         return render(request, 'course-list.html', {
             'courses' : courses,
             'course_num' : all_courses.count(),
