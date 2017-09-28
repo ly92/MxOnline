@@ -12,6 +12,6 @@ urlpatterns = [
     url(r'^org/teacher/(?P<org_id>\d+)/$', OrgDetailTeacherView.as_view(), name='org_detail_teacher'),
     url(r'^add/fav/$', AddFavView.as_view(), name='add_fav'),
 
-    url(r'^teacher/list/$', TeachersListView.as_view(), name='teacher_list'),
+    url(r'^teacher/list/(?P<org_id>\d+)/$', TeachersListView.as_view(), name='teacher_list'),
     url(r'^teacher/detail/(?P<teacher_id>\d+)/$', TeacherDetailView.as_view(), name='teacher_detail'),
 ]

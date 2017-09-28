@@ -286,10 +286,14 @@ class AddFavView(View):
 
 
 class TeachersListView(View):
-    def get(self, request):
+    def get(self, request, org_id):
         all_teachers = Teacher.objects.all()
         # 讲师排行榜
         sorted_teacher = all_teachers.order_by('-click_nums')[:3]
+
+        if int(org_id) > 0:
+            org = CourseOrg.objects.get(id=int(org_id))
+            all_teachers = all_teachers.filter(org=org)
 
         search_keywords = request.GET.get('keywords', '')
         if search_keywords:
